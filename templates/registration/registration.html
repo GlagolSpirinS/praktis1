@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Регистрация</h2>
+    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <!-- Поле для имени пользователя -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Имя пользователя</label>
+            <input type="text" name="username" id="username" class="form-control" required>
+            <div class="text-danger" id="username-error"></div>
+        </div>
+        
+        <!-- Поле для email -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Электронная почта</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+            <div class="text-danger" id="email-error"></div>
+        </div>
+
+        <!-- Поле для пароля -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Пароль</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+            <div class="text-danger" id="password-error"></div>
+        </div>
+
+        <!-- Поле для подтверждения пароля -->
+        <div class="mb-3">
+            <label for="password_confirmation" class="form-label">Подтверждение пароля</label>
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+            <div class="text-danger" id="password-confirmation-error"></div>
+        </div>
+
+        <!-- Поле для имени -->
+        <div class="mb-3">
+            <label for="first_name" class="form-label">Имя</label>
+            <input type="text" name="first_name" id="first_name" class="form-control" required>
+            <div class="text-danger" id="first-name-error"></div>
+        </div>
+
+        <!-- Поле для фамилии -->
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Фамилия</label>
+            <input type="text" name="last_name" id="last_name" class="form-control" required>
+            <div class="text-danger" id="last-name-error"></div>
+        </div>
+
+        <!-- Поле для выбора пола -->
+        <div class="mb-3">
+            <label for="gender" class="form-label">Пол</label>
+            <select name="gender" id="gender" class="form-control" required>
+                <option value="">Выберите пол</option>
+                <option value="Мужчина">Мужчина</option>
+                <option value="Женщина">Женщина</option>
+            </select>
+            <div class="text-danger" id="gender-error"></div>
+        </div>
+
+        <!-- Поле для загрузки аватара -->
+        <div class="mb-3">
+            <label for="avatar" class="form-label">Аватар</label>
+            <input type="file" name="avatar" id="avatar" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-dark">Зарегистрироваться</button>
+    </form>
+</div>
+{% endblock %}

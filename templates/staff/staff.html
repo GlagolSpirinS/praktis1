@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+    <title>Персонал</title>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <div class="list-group" id="list-tab" role="tablist">
+                    {% for department in departments %}
+                        {% if department.user_set.exists %}
+                            <a class="btn btn-outline-dark mb-2 {% if forloop.first %}active{% endif %}"
+                               id="list-{{ department.id }}-list"
+                               data-toggle="list"
+                               href="#list-{{ department.id }}"
+                               role="tab"
+                               aria-controls="{{ department.id }}">
+                               {{ department.name }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="tab-content" id="nav-tabContent">
+                    {% for department in departments %}
+                        {% if department.user_set.exists %}
+                            <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                                 id="list-{{ department.id }}"
+                                 role="tabpanel"
+                                 aria-labelledby="list-{{ department.id }}-list">
+                                {% for user in department.user_set.all %}
+                                    <button class="btn btn-outline-dark" onclick="window.location.href='{% url 'profile' user.id %}'">
+                                        {{ user.first_name }} {{ user.last_name }}
+                                        <br>
+                                        ({{ user.position }})
+                                    </button>
+                                    <br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

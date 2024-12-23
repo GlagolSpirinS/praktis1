@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'tasks/task.js' %}"></script>
+    <title>Задания</title>
+    <div class="container">
+        <div class="row">
+            <!-- Левая колонка со списком задач -->
+            <div class="col-4">
+                <div class="list-group" id="list-tab" role="tablist">
+                    {% for task_item in tasks_with_comments %}
+                    <a class="btn mb-2 {% if forloop.first %}active{% endif %}
+                               {% if task_item.task.status == 'completed' %}btn-success{% else %}btn-outline-dark{% endif %}"
+                       id="list-{{ task_item.task.id }}-list"
+                       data-toggle="list"
+                       href="#list-{{ task_item.task.id }}"
+                       role="tab"
+                       aria-controls="{{ task_item.task.id }}">
+                       {{ task_item.task.title }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Правая колонка (панель) с содержимым выбранной задачи -->
+            <div id="right-panel" class="col-8">
+                <div class="tab-content" id="nav-tabContent">
+                    {% for task_item in tasks_with_comments %}
+                        <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                             id="list-{{ task_item.task.id }}"
+                             role="tabpanel"
+                             aria-labelledby="list-{{ task_item.task.id }}-list">
+                            <h3>{{ task_item.task.title }}</h3>
+                            <p><strong>Описание:</strong> {{ task_item.task.description }}</p>
+                            <p><strong>Статус:</strong> {{ task_item.task.get_status_display }}</p>
+                            <p><strong>Дата создания:</strong> {{ task_item.task.created_at }}</p>
+                            <p><strong>Назначено:</strong> {{ task_item.task.assigned_to.get_full_name }}</p>
+
+
+
+                            <!-- Форма прикрепления файла -->
+                            <h5 class="mt-4">Прикрепить файл</h5>
+                            <input type="file" id="file-input-{{ task_item.task.id }}" class="form-control mb-2">
+                            <button class="btn btn-primary" onclick="uploadFile({{ task_item.task.id }})">Загрузить</button>
+
+                            <h5>Прикрепленные файлы</h5>
+                            <ul>
+                                {% for attachment in task_item.task.attachments.all %}
+                                    <li><a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        
+                                                    <!-- Кнопка завершения задачи -->
+                            <button class="btn btn-success mt-2"
+                                    onclick="completeTask({{ task_item.task.id }})"
+                                    {% if task_item.task.status == 'completed' %}
+                                        disabled
+                                    {% endif %}>
+                                {% if task_item.task.status == 'completed' %}
+                                    Завершено
+                                {% else %}
+                                    Завершить
+                                {% endif %}
+                            </button>
+
+                            <!-- Форма добавления комментария -->
+                            <h5 class="mt-4">Добавить комментарий</h5>
+                            <textarea id="comment-input-{{ task_item.task.id }}" class="form-control mb-2" rows="3"></textarea>
+                            <button class="btn btn-secondary" onclick="addComment({{ task_item.task.id }})">Отправить</button>
+
+                            <!-- Список комментариев -->
+                            <h5 class="mt-4">Комментарии</h5>
+                            <div id="comments-list-{{ task_item.task.id }}">
+                                {% for comment in task_item.comments %}
+                                    <div class="mb-2">
+                                        <img src="{{ comment.user.avatar.url }}" class="rounded-circle me-3" width="30" alt="Аватар">
+                                        {{ comment.user.first_name }} {{ comment.user.last_name }}: {{ comment.comment }} <br>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
